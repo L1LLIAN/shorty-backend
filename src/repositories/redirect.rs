@@ -39,19 +39,25 @@ impl RedirectRepository {
         result.is_ok()
     }
 
-    pub async fn create(&self, url: String) -> bool {
+    pub async fn create(&self, url: String) -> Option<String> {
         let mut slug = gen_slug();
         while self.is_slug_in_use(slug.clone()).await {
             slug = gen_slug();
         }
 
         let result = sqlx::query("INSERT INTO redirects (slug, url) VALUES ($1, $2)")
-            .bind(slug)
+            .bind(slug.clone())
             .bind(url)
             .execute(&self.pg)
             .await;
 
-        result.is_ok() && result.unwrap().rows_affected() > 0
+        return match result {
+            Ok(_) => Some(slug.clone()),
+            Err(e) => {
+                println!("err = {:?}", e);
+                None
+            }
+        };
     }
 }
 

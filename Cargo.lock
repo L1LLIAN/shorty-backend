@@ -1253,6 +1253,7 @@ dependencies = [
  "actix-web",
  "dotenv",
  "rand",
+ "serde",
  "sqlx",
 ]
 
