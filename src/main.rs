@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use actix_cors::Cors;
 use actix_web::web::Data;
-use actix_web::{http, App, HttpServer};
+use actix_web::{App, HttpServer};
 use dotenv::dotenv;
 use sqlx::migrate::Migrator;
 use sqlx::postgres::PgPoolOptions;

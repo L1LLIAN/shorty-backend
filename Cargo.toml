@@ -12,3 +12,4 @@ dotenv = "0.15.0"
 rand = "0.8.5"
 sqlx = { version = "0.5.11", features = ["postgres", "runtime-actix-rustls"] }
 serde = { version = "1.0", features = ["derive"] }
+validator = "0.12"
