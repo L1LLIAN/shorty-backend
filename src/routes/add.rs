@@ -1,5 +1,5 @@
-use actix_web::HttpResponse;
 use actix_web::web::{Data, Path};
+use actix_web::HttpResponse;
 use serde::{Deserialize, Serialize};
 
 use crate::ShortyContext;

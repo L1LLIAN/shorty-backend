@@ -1,8 +1,9 @@
 use std::env;
 use std::time::Duration;
 
+use actix_cors::Cors;
 use actix_web::web::Data;
-use actix_web::{App, HttpServer};
+use actix_web::{http, App, HttpServer};
 use dotenv::dotenv;
 use sqlx::migrate::Migrator;
 use sqlx::postgres::PgPoolOptions;
@@ -36,7 +37,13 @@ async fn main() -> std::io::Result<()> {
     let ctx = ShortyContext { redirect_repo };
 
     HttpServer::new(move || {
+        let cors = Cors::default()
+            .allowed_origin("http://localhost:3000/") // frontend port
+            .allowed_methods(vec!["GET", "POST"])
+            .max_age(3600);
+
         App::new()
+            .wrap(cors)
             .app_data(Data::new(ctx.clone()))
             .service(routes::index_get)
             .service(routes::index_get_redirect)
