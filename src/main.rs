@@ -39,6 +39,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(Data::new(ctx.clone()))
             .service(routes::index_get)
+            .service(routes::index_get_redirect)
             .service(routes::add_post)
     })
     .bind(("0.0.0.0", 8080))?

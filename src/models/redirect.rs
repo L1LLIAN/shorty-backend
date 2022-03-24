@@ -2,5 +2,5 @@
 pub struct Redirect {
     id: i32,
     slug: String,
-    url: String,
+    pub url: String,
 }
