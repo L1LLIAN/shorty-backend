@@ -1,6 +1,6 @@
 #[derive(sqlx::FromRow, Debug)]
 pub struct Redirect {
-    id: i32,
-    slug: String,
+    pub id: i32,
+    pub slug: String,
     pub url: String,
 }
