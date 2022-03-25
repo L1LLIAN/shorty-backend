@@ -14,7 +14,7 @@ impl RedirectRepository {
         Self { pg }
     }
 
-    pub async fn get_redirect_by_slug(&self, slug: String) -> Option<Redirect> {
+    pub async fn get_redirect_by_slug(&self, slug: &String) -> Option<Redirect> {
         let result = sqlx::query_as::<_, Redirect>("SELECT * FROM redirects WHERE slug = $1")
             .bind(slug)
             .fetch_one(&self.pg)
@@ -29,7 +29,7 @@ impl RedirectRepository {
         };
     }
 
-    pub async fn is_slug_in_use(&self, slug: String) -> bool {
+    pub async fn is_slug_in_use(&self, slug: &String) -> bool {
         let result = sqlx::query("SELECT * FROM redirects WHERE slug = $1")
             .bind(slug)
             .fetch_one(&self.pg)
@@ -39,20 +39,20 @@ impl RedirectRepository {
         result.is_ok()
     }
 
-    pub async fn create(&self, url: String) -> Option<String> {
+    pub async fn create(&self, url: &String) -> Option<String> {
         let mut slug = gen_slug();
-        while self.is_slug_in_use(slug.clone()).await {
+        while self.is_slug_in_use(&slug).await {
             slug = gen_slug();
         }
 
         let result = sqlx::query("INSERT INTO redirects (slug, url) VALUES ($1, $2)")
-            .bind(slug.clone())
+            .bind(&slug)
             .bind(url)
             .execute(&self.pg)
             .await;
 
         return match result {
-            Ok(_) => Some(slug.clone()),
+            Ok(_) => Some(slug),
             Err(e) => {
                 println!("err = {:?}", e);
                 None

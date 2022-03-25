@@ -11,9 +11,9 @@ pub async fn get() -> impl Responder {
 #[actix_web::get("/{slug}")]
 pub async fn get_redirect(ctx: Data<ShortyContext>, slug: Path<String>) -> impl Responder {
     let slug = slug.into_inner();
-    let redirect = ctx.redirect_repo.get_redirect_by_slug(slug.clone()).await;
+    let redirect = ctx.redirect_repo.get_redirect_by_slug(&slug).await;
     return match redirect {
         Some(r) => r.url,
-        None => format!("No redirect found for {}", slug.clone()),
+        None => format!("No redirect found for {}", slug),
     };
 }

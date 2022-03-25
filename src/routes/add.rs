@@ -19,8 +19,8 @@ struct AddRedirectRequest {
 
 #[actix_web::post("/add")]
 pub async fn post(ctx: Data<ShortyContext>, req: Json<AddRedirectRequest>) -> HttpResponse {
-    let url = req.url.clone();
-    if !validate_url(url.clone()) {
+    let url = &req.url;
+    if !validate_url(url) {
         return HttpResponse::BadRequest().finish();
     }
 
