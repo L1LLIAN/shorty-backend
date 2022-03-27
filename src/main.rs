@@ -21,8 +21,8 @@ static MIGRATOR: Migrator = sqlx::migrate!();
 async fn main() -> std::io::Result<()> {
     let _ = dotenv();
 
-    let pg_uri =
-        env::var("DATABASE_URL").unwrap_or("postgres://postgres@localhost/shorty".to_string());
+    let pg_uri = env::var("DATABASE_URL")
+        .unwrap_or_else(|_| "postgres://postgres@localhost/shorty".to_string());
     let pg_pool = PgPoolOptions::new()
         .max_connections(5)
         .connect_timeout(Duration::from_secs(1))

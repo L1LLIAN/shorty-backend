@@ -14,7 +14,7 @@ impl RedirectRepository {
         Self { pg }
     }
 
-    pub async fn get_redirect_by_slug(&self, slug: &String) -> Option<Redirect> {
+    pub async fn get_redirect_by_slug(&self, slug: &str) -> Option<Redirect> {
         let result = sqlx::query_as::<_, Redirect>("SELECT * FROM redirects WHERE slug = $1")
             .bind(slug)
             .fetch_one(&self.pg)
@@ -22,14 +22,14 @@ impl RedirectRepository {
 
         // TODO: Error logging if error isn't non-existent row
 
-        return if result.is_ok() {
+        if result.is_ok() {
             Some(result.unwrap())
         } else {
             None
-        };
+        }
     }
 
-    pub async fn is_slug_in_use(&self, slug: &String) -> bool {
+    pub async fn is_slug_in_use(&self, slug: &str) -> bool {
         let result = sqlx::query("SELECT * FROM redirects WHERE slug = $1")
             .bind(slug)
             .fetch_one(&self.pg)
@@ -39,7 +39,7 @@ impl RedirectRepository {
         result.is_ok()
     }
 
-    pub async fn create(&self, url: &String) -> Option<String> {
+    pub async fn create(&self, url: &str) -> Option<String> {
         let mut slug = gen_slug();
         while self.is_slug_in_use(&slug).await {
             slug = gen_slug();
@@ -63,9 +63,9 @@ impl RedirectRepository {
 
 // From https://stackoverflow.com/a/54277357
 fn gen_slug() -> String {
-    return rand::thread_rng()
+    rand::thread_rng()
         .sample_iter(&Alphanumeric)
         .take(7)
         .map(char::from)
-        .collect();
+        .collect()
 }

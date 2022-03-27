@@ -25,8 +25,8 @@ pub async fn post(ctx: Data<ShortyContext>, req: Json<AddRedirectRequest>) -> Ht
     }
 
     let slug_option = ctx.redirect_repo.create(url).await;
-    return match slug_option {
+    match slug_option {
         None => HttpResponse::BadRequest().finish(),
         Some(slug) => HttpResponse::Ok().json(RedirectCreatedResponse { slug }),
-    };
+    }
 }
