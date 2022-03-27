@@ -2,6 +2,7 @@ use std::env;
 use std::time::Duration;
 
 use actix_cors::Cors;
+use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use actix_web::{App, HttpServer};
 use dotenv::dotenv;
@@ -20,6 +21,7 @@ static MIGRATOR: Migrator = sqlx::migrate!();
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let _ = dotenv();
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
     let pg_uri = env::var("DATABASE_URL")
         .unwrap_or_else(|_| "postgres://postgres@localhost/shorty".to_string());
@@ -43,6 +45,7 @@ async fn main() -> std::io::Result<()> {
             .max_age(3600);
 
         App::new()
+            .wrap(Logger::default())
             .wrap(cors)
             .app_data(Data::new(ctx.clone()))
             .service(routes::index_get)
